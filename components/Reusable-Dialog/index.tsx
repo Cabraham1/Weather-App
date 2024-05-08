@@ -98,22 +98,24 @@ const AlertDialog: React.FC<AlertDialogProps> = ({
             {disagreeText}
           </Button>
 
-          <Button
-            onClick={handleAgree}
-            autoFocus
-            sx={{
-              borderRadius: "1rem",
-              textTransform: "capitalize",
-              backgroundColor: deleteColor ? "#FF0000" : "#4F46E5",
-              color: "white",
-              px: "20px",
-              "&:hover": {
+          {agreeText && (
+            <Button
+              onClick={handleAgree}
+              autoFocus
+              sx={{
+                borderRadius: "1rem",
+                textTransform: "capitalize",
                 backgroundColor: deleteColor ? "#FF0000" : "#4F46E5",
-              },
-            }}
-          >
-            {agreeText}
-          </Button>
+                color: "white",
+                px: "20px",
+                "&:hover": {
+                  backgroundColor: deleteColor ? "#FF0000" : "#4F46E5",
+                },
+              }}
+            >
+              {agreeText}
+            </Button>
+          )}
         </DialogActions>
       </Box>
     </Dialog>

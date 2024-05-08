@@ -113,3 +113,15 @@ export const WeatherData = [
     isLiked: false,
   },
 ];
+
+export const noteDatas = [
+  {
+    id: 1,
+    content:
+      "Sample note content 1 Sample note content 2 Sample note content 2 Sample note content 2",
+  },
+  { id: 2, content: "Sample note content 2" },
+  { id: 3, content: "Sample note content 3" },
+  { id: 4, content: "Sample note content 4" },
+  { id: 5, content: "Sample note content 5" },
+];

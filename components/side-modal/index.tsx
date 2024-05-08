@@ -1,21 +1,5 @@
-import {
-  Close,
-  ModeEditOutlined,
-  MoreVert,
-  PeopleAlt,
-} from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Dialog,
-  FormControlLabel,
-  Grid,
-  MenuItem,
-  Radio,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Close, ModeEditOutlined, PeopleAlt } from "@mui/icons-material";
+import { Box, Button, Dialog, Typography } from "@mui/material";
 import Image from "next/image";
 import SunnyLogo from "../../public/sunny.svg";
 import CloudLogo from "../../public/cloudy.svg";
@@ -23,12 +7,63 @@ import RainLogo from "../../public/rain.svg";
 import LikeIcon from "../../public/like.svg";
 import disLikeIcon from "../../public/dislike.svg";
 import HorizontalCard from "../home-banner/HorizontalCard";
+import WeatherCard from "../home-banner/weatherCard";
+import ViewNote from "../Note/viewNote";
+import { noteDatas } from "../../utils/constant";
+import AlertDialog from "../Reusable-Dialog";
+import { useState } from "react";
+
+interface Note {
+  id: number;
+  content: string;
+}
 
 const Index: React.FC<{
   openSideModal: boolean;
   setOpenSideModal: React.Dispatch<React.SetStateAction<boolean>>;
   SelectedWeatherData: any;
 }> = ({ openSideModal, setOpenSideModal, SelectedWeatherData }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogView, setOpenDialogView] = useState(false);
+  const [openDialogAdd, setOpenDialogAdd] = useState(false);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+
+  const handleAddNote = () => {
+    setOpenDialogAdd(false);
+  }
+
+  const handleViewNote = (noteId: number, noteContent: string) => {
+    setSelectedNote({
+      id: noteId,
+      content: noteContent,
+    });
+    setOpenDialogView(true);
+  };
+
+  const handleDeleteNote = (noteId: number, noteContent: string) => {
+    setSelectedNote({
+      id: noteId,
+      content: noteContent,
+    });
+    setOpenDialog(true);
+  };
+
+  const handleDelete = () => {
+    if (selectedNote) {
+      setSelectedNote(null);
+      setOpenDialog(false);
+    }
+  };
+
+  const handleClickClose = () => {
+    setOpenDialog(false);
+  };
+  const handleClickCloseView = () => {
+    setOpenDialogView(false);
+  };
+  const handleClickCloseAdd = () => {
+    setOpenDialogAdd(false);
+  };
   return (
     <>
       <Dialog open={openSideModal} onClose={() => setOpenSideModal(false)}>
@@ -96,6 +131,7 @@ const Index: React.FC<{
                 }}
                 variant="contained"
                 startIcon={<ModeEditOutlined />}
+                onClick={() => setOpenDialogAdd(true)}
               >
                 Add Note
               </Button>
@@ -199,10 +235,92 @@ const Index: React.FC<{
             >
               {SelectedWeatherData?.population}
             </Typography>
-           <HorizontalCard />
+            <HorizontalCard />
+          </Box>
+          <Box
+            sx={{
+              my: "2rem",
+              width: "100%",
+              height: "1px",
+              bgcolor: "gray",
+            }}
+          />
+          <Box>
+            <WeatherCard />
+          </Box>
+          {/* table section */}
+          <Box
+            sx={{
+              border: "1px solid gray",
+              boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+              borderRadius: "10px",
+              width: "90%",
+              my: "2rem",
+              mx: "auto",
+              px: "1rem",
+              py: ".5rem",
+            }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                textAlign: "start",
+                textTransform: "capitalize",
+                fontSize: "1rem",
+                color: "red",
+                py: "1rem",
+              }}
+            >
+              Notes
+            </Typography>
+            {noteDatas?.map((note) => (
+              <ViewNote
+                key={note.id}
+                note={note}
+                onView={() => {
+                  handleViewNote(note.id, note.content);
+                }}
+                onDelete={() => {
+                  handleDeleteNote(note.id, note.content);
+                }}
+              />
+            ))}
           </Box>
         </Box>
       </Dialog>
+      {/* delete modal  */}
+      <AlertDialog
+        open={openDialog}
+        onClose={handleClickClose}
+        onAgree={handleDelete}
+        title={"Delete"}
+        deleteColor={true}
+        content={"Do you wish to delete this Note?."}
+        disagreeText={"No"}
+        agreeText={"Yes, Delete"}
+      />
+
+      {/* view modal ˝ */}
+      <AlertDialog
+        open={openDialogView}
+        onClose={handleClickCloseView}
+        title={"My Note"}
+        deleteColor={false}
+        content={selectedNote?.content || ""}
+        disagreeText={"No"}
+      />
+
+      {/* view modal ˝ */}
+      <AlertDialog
+        open={openDialogAdd}
+        onClose={handleClickCloseAdd}
+        onAgree={handleAddNote}
+        title={"new Note"}
+        deleteColor={true}
+        content={"Do you wish to delete this Note?."}
+        disagreeText={"Cancel"}
+        agreeText={"Save Note"}
+      />
     </>
   );
 };
