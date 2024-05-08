@@ -19,10 +19,10 @@ const WeatherCard: React.FC<WeatherData> = ({ time, iconSrc, temperature }) => {
         alignItems: "center",
         background: "linear-gradient(#957DCD, #523D7F)",
         borderRadius: "10px",
-        width: "100px", // Set a fixed width
+        width: "100px",
         px: "1rem",
         py: "1rem",
-        textAlign: "center", // Center align the content
+        textAlign: "center", 
       }}
     >
       <Typography

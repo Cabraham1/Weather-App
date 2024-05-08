@@ -9,6 +9,23 @@ const Index = () => {
     <>
       <Box
         sx={{
+          padding: "2rem",
+        }}
+      >
+        <Typography
+          variant="h5"
+          sx={{
+            textAlign: "start",
+            textTransform: "capitalize",
+            fontSize: "1rem",
+            color: "gray",
+          }}
+        >
+          Today Weather Information
+        </Typography>
+      </Box>
+      <Box
+        sx={{
           height: "100%",
           borderRadius: "10px",
           bgcolor: "black",
