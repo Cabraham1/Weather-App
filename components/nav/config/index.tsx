@@ -2,7 +2,7 @@ export const navConfig = [
   {
     title: "Home",
     icon: "/category.svg",
-    path: "/home",
+    path: "/",
   },
   {
     title: "Starred",
