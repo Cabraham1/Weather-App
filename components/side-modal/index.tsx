@@ -10,7 +10,7 @@ import HorizontalCard from "../home-banner/HorizontalCard";
 import WeatherCard from "../home-banner/weatherCard";
 import ViewNote from "../Note/viewNote";
 import { noteDatas } from "../../utils/constant";
-import AlertDialog from "../Reusable-Dialog";
+import { AlertDialog, AlertDialogText } from "../Reusable-Dialog";
 import { useState } from "react";
 
 interface Note {
@@ -30,7 +30,7 @@ const Index: React.FC<{
 
   const handleAddNote = () => {
     setOpenDialogAdd(false);
-  }
+  };
 
   const handleViewNote = (noteId: number, noteContent: string) => {
     setSelectedNote({
@@ -311,13 +311,11 @@ const Index: React.FC<{
       />
 
       {/* view modal ˝ */}
-      <AlertDialog
+      <AlertDialogText
         open={openDialogAdd}
         onClose={handleClickCloseAdd}
         onAgree={handleAddNote}
-        title={"new Note"}
-        deleteColor={true}
-        content={"Do you wish to delete this Note?."}
+        title={"New Note"}
         disagreeText={"Cancel"}
         agreeText={"Save Note"}
       />

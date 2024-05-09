@@ -5,7 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Box, Typography } from "@mui/material";
+import { Box, InputLabel, TextField, Typography } from "@mui/material";
 
 export interface AlertDialogProps {
   open: boolean;
@@ -17,8 +17,16 @@ export interface AlertDialogProps {
   agreeText?: string;
   deleteColor?: boolean;
 }
+interface AlertDialogTextProps {
+  open: boolean;
+  onClose: () => void;
+  onAgree: (description: string) => void;
+  title: string;
+  disagreeText: string;
+  agreeText: string;
+}
 
-const AlertDialog: React.FC<AlertDialogProps> = ({
+export const AlertDialog: React.FC<AlertDialogProps> = ({
   open,
   onClose,
   onAgree,
@@ -122,4 +130,95 @@ const AlertDialog: React.FC<AlertDialogProps> = ({
   );
 };
 
-export default AlertDialog;
+export const AlertDialogText: React.FC<AlertDialogTextProps> = ({
+  open,
+  onClose,
+  onAgree,
+  disagreeText,
+  agreeText,
+}) => {
+  const [description, setDescription] = React.useState("");
+
+  const handleAgree = () => {
+    if (onAgree) {
+      onAgree(description);
+      console.log(description)
+    }
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      sx={{ zIndex: 10000 }}
+      maxWidth="lg"
+    >
+      <Box
+        sx={{
+          px: "15px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          width: { xs: "600px", sm: "621px" },
+        }}
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <form>
+              <InputLabel sx={{ marginBottom: "14px" }}>Add Note</InputLabel>
+              <TextField
+                multiline
+                rows={6}
+                sx={{ width: "600px", marginBottom: "5px" }}
+                id="outlined-basic"
+                label="Write in here..."
+                variant="outlined"
+                value={description}
+                required
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </form>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={onClose}
+            sx={{
+              borderRadius: "1rem",
+              textTransform: "capitalize",
+              backgroundColor: "black",
+              color: "white",
+              px: "20px",
+              "&:hover": {
+                backgroundColor: "darkgray",
+              },
+            }}
+          >
+            {disagreeText}
+          </Button>
+
+          <Button
+            onClick={handleAgree}
+            autoFocus
+            sx={{
+              borderRadius: "1rem",
+              textTransform: "capitalize",
+              backgroundColor: "#4F46E5",
+              color: "white",
+              px: "20px",
+              "&:hover": {
+                backgroundColor: "#4F46E5",
+              },
+            }}
+          >
+            {agreeText}
+          </Button>
+        </DialogActions>
+      </Box>
+    </Dialog>
+  );
+};
