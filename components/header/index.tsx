@@ -1,7 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Image from "next/image";
 import { SearchBar } from "../search-bar/one";
-import { useState } from "react";
+import useLikesStore from "../../utils/zustandStore/useLikesStore";
 
 const Header: React.FC<{
   small: boolean;
@@ -9,16 +10,25 @@ const Header: React.FC<{
   openSmallClick: () => void;
   openLargeClick: () => void;
 }> = ({ small, large, openSmallClick, openLargeClick }) => {
-
   const [searchResults, setSearchResults] = useState("");
+
+  const { likes } = useLikesStore();
+
+  // Local state to hold the likes count
+  const [likesCount, setLikesCount] = useState(0);
+
+  useEffect(() => {
+    // Update likes count when likes object changes
+    const count = Object.keys(likes).length;
+    setLikesCount(count);
+  }, [likes]);
 
   const searchQuery = (query: string) => {
     // Update search results
-    // setSearchResults(query as string);
-    
+    setSearchResults(query);
   };
 
-  console.log('Search results:', searchResults);
+  console.log(likesCount)
 
   return (
     <Box
@@ -67,6 +77,7 @@ const Header: React.FC<{
 
           <Box sx={{ marginRight: "40px" }}>
             <Image alt="bell" width={24} height={24} src="/bell.svg" />
+            {likesCount}
           </Box>
         </Box>
       </Box>

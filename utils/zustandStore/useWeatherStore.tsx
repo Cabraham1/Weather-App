@@ -219,20 +219,29 @@ const useWeatherStore = create<CustomState>((set, get) => ({
   },
 
   toggleDelete: (cityId: number) => {
-    set((state) => ({
-      ...state,
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
+    set((state) => {
+      // Toggle the isDelete property for the specific city
+      const updatedCitiesWeather = state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
           ? { ...cityWeather, isDelete: !cityWeather.isDelete }
           : cityWeather
-      ),
-      activeCitiesWeather: state.activeCitiesWeather.filter(
-        (cityWeather) => !cityWeather.isDelete
-      ),
-      favoriteCitiesWeather: state.favoriteCitiesWeather.filter(
-        (cityWeather) => !cityWeather.isDelete
-      ),
-    }));
+      );
+
+      // Filter out the clicked city from the activeCitiesWeather and favoriteCitiesWeather arrays
+      const updatedActiveCitiesWeather = state.activeCitiesWeather.filter(
+        (cityWeather) => cityWeather.city.geonameId !== cityId
+      );
+      const updatedFavoriteCitiesWeather = state.favoriteCitiesWeather.filter(
+        (cityWeather) => cityWeather.city.geonameId !== cityId
+      );
+
+      return {
+        ...state,
+        citiesWeather: updatedCitiesWeather,
+        activeCitiesWeather: updatedActiveCitiesWeather,
+        favoriteCitiesWeather: updatedFavoriteCitiesWeather,
+      };
+    });
   },
 
   getState: () => get(),

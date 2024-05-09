@@ -57,8 +57,7 @@ const Index: React.FC<{
   };
 
   const handleDeleteNote = (noteId: number, noteContent: string) => {
-    setOpenDialog(true); // Open delete confirmation dialog
-    // Pass the noteId to the onDelete callback
+    setOpenDialog(true);
     setSelectedNote({
       id: noteId,
       content: noteContent,
@@ -81,14 +80,17 @@ const Index: React.FC<{
       if (noteIndex !== -1) {
         const updatedNotes = [...SelectedWeatherData.notes];
         updatedNotes[noteIndex].content = editedNote.content; // Update content in the local state
-        useWeatherStore.getState().editNote(cityId, editedNote.id, editedNote.content); // Update content in the global state
+        useWeatherStore
+          .getState()
+          .editNote(cityId, editedNote.id, editedNote.content); // Update content in the global state
         setNotes(updatedNotes); // Update local state with the updated content
-        toast.success("Note edited Successfully!");
       } else {
         console.log("Note index not found.");
       }
       setEditedNote(null);
       setOpenDialogAdd(false);
+      setOpenSideModal(false);
+      toast.success("Note edited Successfully!");
     }
   };
   const handleDelete = () => {
