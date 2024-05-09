@@ -1,47 +1,52 @@
 import { create } from "zustand";
-
 interface City {
   adminCode1: string;
   lng: string;
   lat: string;
-  geonameId: number; // Change id to geonameId
+  geonameId: number;
   toponymName: string;
   countryCode: string;
+  population: number;
 }
 
 interface Note {
-  cityId: number; // Reference to city ID
   text: string;
 }
 
 interface WeatherData {
   temperature?: string;
   weatherObservation: any;
+  clouds: string;
+}
+
+interface CityWeather {
+  city: City;
+  weatherData: WeatherData;
+  notes: Note[];
+  favorite: boolean;
+  isDelete: boolean;
 }
 
 interface CustomState {
-  citiesWeather: {
-    city: City;
-    weatherData: WeatherData;
-    notes: string;
-    favorite: boolean;
-    isDelete: boolean;
-  }[];
+  citiesWeather: CityWeather[];
+  favoriteCitiesWeather: CityWeather[];
+  activeCitiesWeather: CityWeather[];
   addCityWeather: (cityWeather: {
     city: City;
     weatherData: WeatherData;
   }) => void;
   addNote: (cityId: number, note: string) => void;
-  removeNote: (cityId: number) => void;
-  editNote: (cityId: number, note: string) => void;
-  viewNotes: (cityId: number) => string;
+  removeNote: (cityId: number, noteIndex: number) => void;
+  viewNotes: (cityId: number) => string[];
   toggleFavorite: (cityId: number) => void;
   toggleDelete: (cityId: number) => void;
-  getState: () => CustomState; // Include the getState method
+  getState: () => CustomState;
 }
 
 const useWeatherStore = create<CustomState>((set, get) => ({
   citiesWeather: [],
+  favoriteCitiesWeather: [],
+  activeCitiesWeather: [],
   addCityWeather: (cityWeather: { city: City; weatherData: WeatherData }) => {
     set((state) => ({
       citiesWeather: [
@@ -49,7 +54,27 @@ const useWeatherStore = create<CustomState>((set, get) => ({
         {
           city: cityWeather.city,
           weatherData: cityWeather.weatherData,
-          notes: "",
+          notes: [],
+          favorite: false,
+          isDelete: false,
+        },
+      ],
+      favoriteCitiesWeather: [
+        ...state.favoriteCitiesWeather,
+        {
+          city: cityWeather.city,
+          weatherData: cityWeather.weatherData,
+          notes: [],
+          favorite: false,
+          isDelete: false,
+        },
+      ],
+      activeCitiesWeather: [
+        ...state.activeCitiesWeather,
+        {
+          city: cityWeather.city,
+          weatherData: cityWeather.weatherData,
+          notes: [],
           favorite: false,
           isDelete: false,
         },
@@ -60,55 +85,91 @@ const useWeatherStore = create<CustomState>((set, get) => ({
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: note }
+          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
+          : cityWeather
+      ),
+      favoriteCitiesWeather: state.favoriteCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
+          : cityWeather
+      ),
+      activeCitiesWeather: state.activeCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
           : cityWeather
       ),
     }));
   },
-  removeNote: (cityId: number) => {
+  removeNote: (cityId: number, noteIndex: number) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: "" }
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter(
+                (_, index) => index !== noteIndex
+              ),
+            }
+          : cityWeather
+      ),
+      favoriteCitiesWeather: state.favoriteCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter(
+                (_, index) => index !== noteIndex
+              ),
+            }
+          : cityWeather
+      ),
+      activeCitiesWeather: state.activeCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter(
+                (_, index) => index !== noteIndex
+              ),
+            }
           : cityWeather
       ),
     }));
   },
   viewNotes: (cityId: number) => {
-    const cityWeather: CustomState["citiesWeather"][0] | undefined =
-      get().citiesWeather.find(
-        (cityWeather) => cityWeather.city.geonameId === cityId
-      );
-    return cityWeather?.notes || "";
-  },
-  editNote: (cityId: number, note: string) => {
-    set((state) => ({
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: note }
-          : cityWeather
-      ),
-    }));
+    const cityWeather = get().citiesWeather.find(
+      (cityWeather) => cityWeather.city.geonameId === cityId
+    );
+    return cityWeather ? cityWeather.notes.map((note) => note.text) : [];
   },
   toggleFavorite: (cityId: number) => {
-    set((state) => ({
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, favorite: !cityWeather.favorite }
-          : cityWeather
-      ),
-    }));
+    set((state) => {
+      const updatedActiveCitiesWeather = state.activeCitiesWeather.map(
+        (cityWeather) =>
+          cityWeather.city.geonameId === cityId
+            ? { ...cityWeather, favorite: !cityWeather.favorite }
+            : cityWeather
+      );
+
+      return {
+        citiesWeather: state.citiesWeather, 
+        favoriteCitiesWeather: state.favoriteCitiesWeather, 
+        activeCitiesWeather: updatedActiveCitiesWeather, 
+      };
+    });
   },
+
   toggleDelete: (cityId: number) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, isDelete: !cityWeather.isDelete } // Toggle isDelete
+          ? { ...cityWeather, isDelete: !cityWeather.isDelete }
           : cityWeather
+      ),
+      activeCitiesWeather: state.citiesWeather.filter(
+        (cityWeather) => !cityWeather.isDelete
       ),
     }));
   },
-  getState: () => get(), // Implement the getState method
+  getState: () => get(),
 }));
 
 export default useWeatherStore;

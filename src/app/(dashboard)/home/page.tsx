@@ -14,7 +14,13 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchCitiesWeather();
+        const localData = localStorage.getItem("LargerCitiesData");
+        if (localData) {
+          const parsedData = JSON.parse(localData);
+          useWeatherStore.getState().activeCitiesWeather = parsedData;
+        } else {
+          await fetchCitiesWeather();
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -25,15 +31,10 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const citiesWeather = useWeatherStore(
-    (state: { citiesWeather: any }) => state.citiesWeather
-  );
-
   if (isLoading) {
     return <LoaderBackdrop />;
   }
 
-  console.log("Cities weather:", citiesWeather);
   return (
     <>
       <Box>

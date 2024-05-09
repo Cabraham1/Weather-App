@@ -4,17 +4,17 @@ import React from "react";
 import { PeopleAlt, Delete } from "@mui/icons-material";
 
 interface CityCardProps {
-  dislikeIconSrc: string;
-  likeIconSrc: string;
-  weatherIconSrc: string;
-  cityName: string;
-  isLiked: boolean;
-  temperature: string;
-  weatherDescription: string;
-  population: number;
-  onLikeClick: () => void;
-  onDeleteClick: () => void;
-  onViewClick: () => void;
+  dislikeIconSrc?: any;
+  likeIconSrc?: any;
+  weatherIconSrc?: any;
+  cityName?: string;
+  isLiked?: boolean;
+  temperature?: string;
+  weatherDescription?: string;
+  population?: number;
+  onLikeClick?: () => void;
+  onDeleteClick?: () => void;
+  onViewClick?: () => void;
 }
 
 const CityCard: React.FC<CityCardProps> = ({
@@ -32,7 +32,6 @@ const CityCard: React.FC<CityCardProps> = ({
 }) => {
   return (
     <>
-    
       <Box
         sx={{
           boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
@@ -57,10 +56,10 @@ const CityCard: React.FC<CityCardProps> = ({
             width: "100%",
           }}
         >
-          {!isLiked ? (
+          {isLiked ? (
             <Image
-              src={dislikeIconSrc}
-              alt="dislike"
+              src={likeIconSrc}
+              alt="like"
               width={30}
               height={30}
               onClick={onLikeClick}
@@ -68,8 +67,8 @@ const CityCard: React.FC<CityCardProps> = ({
             />
           ) : (
             <Image
-              src={likeIconSrc}
-              alt="like"
+              src={dislikeIconSrc}
+              alt="dislike"
               width={30}
               height={30}
               onClick={onLikeClick}
