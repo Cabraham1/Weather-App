@@ -25,7 +25,9 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const citiesWeather = useWeatherStore((state) => state.citiesWeather);
+  const citiesWeather = useWeatherStore(
+    (state: { citiesWeather: any }) => state.citiesWeather
+  );
 
   if (isLoading) {
     return <LoaderBackdrop />;

@@ -10,7 +10,7 @@ interface City {
   geonameId: number;
   toponymName: string;
   countryCode: string;
-  // Add more properties if needed
+  id: number; // Add the id property
 }
 
 interface WeatherData {

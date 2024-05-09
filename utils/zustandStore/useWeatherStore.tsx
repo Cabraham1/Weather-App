@@ -1,13 +1,17 @@
-// useWeatherStore.js
 import { create } from "zustand";
 
 interface City {
   adminCode1: string;
   lng: string;
   lat: string;
-  geonameId: number;
+  geonameId: number; // Change id to geonameId
   toponymName: string;
   countryCode: string;
+}
+
+interface Note {
+  cityId: number; // Reference to city ID
+  text: string;
 }
 
 interface WeatherData {
@@ -15,14 +19,13 @@ interface WeatherData {
   weatherObservation: any;
 }
 
-interface State {
+interface CustomState {
   citiesWeather: {
     city: City;
     weatherData: WeatherData;
     notes: string;
-    likes: number;
-    dislikes: number;
     favorite: boolean;
+    isDelete: boolean;
   }[];
   addCityWeather: (cityWeather: {
     city: City;
@@ -31,22 +34,29 @@ interface State {
   addNote: (cityId: number, note: string) => void;
   removeNote: (cityId: number) => void;
   editNote: (cityId: number, note: string) => void;
-  addLike: (cityId: number) => void;
-  addDislike: (cityId: number) => void;
+  viewNotes: (cityId: number) => string;
   toggleFavorite: (cityId: number) => void;
+  toggleDelete: (cityId: number) => void;
+  getState: () => CustomState; // Include the getState method
 }
 
-const useWeatherStore = create<State>((set) => ({
+const useWeatherStore = create<CustomState>((set, get) => ({
   citiesWeather: [],
-  addCityWeather: (cityWeather) => {
+  addCityWeather: (cityWeather: { city: City; weatherData: WeatherData }) => {
     set((state) => ({
       citiesWeather: [
         ...state.citiesWeather,
-        { ...cityWeather, notes: "", likes: 0, dislikes: 0, favorite: false },
+        {
+          city: cityWeather.city,
+          weatherData: cityWeather.weatherData,
+          notes: "",
+          favorite: false,
+          isDelete: false,
+        },
       ],
     }));
   },
-  addNote: (cityId, note) => {
+  addNote: (cityId: number, note: string) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
@@ -55,7 +65,7 @@ const useWeatherStore = create<State>((set) => ({
       ),
     }));
   },
-  removeNote: (cityId) => {
+  removeNote: (cityId: number) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
@@ -64,7 +74,14 @@ const useWeatherStore = create<State>((set) => ({
       ),
     }));
   },
-  editNote: (cityId, note) => {
+  viewNotes: (cityId: number) => {
+    const cityWeather: CustomState["citiesWeather"][0] | undefined =
+      get().citiesWeather.find(
+        (cityWeather) => cityWeather.city.geonameId === cityId
+      );
+    return cityWeather?.notes || "";
+  },
+  editNote: (cityId: number, note: string) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
@@ -73,25 +90,7 @@ const useWeatherStore = create<State>((set) => ({
       ),
     }));
   },
-  addLike: (cityId) => {
-    set((state) => ({
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, likes: cityWeather.likes + 1 }
-          : cityWeather
-      ),
-    }));
-  },
-  addDislike: (cityId) => {
-    set((state) => ({
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, dislikes: cityWeather.dislikes + 1 }
-          : cityWeather
-      ),
-    }));
-  },
-  toggleFavorite: (cityId) => {
+  toggleFavorite: (cityId: number) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
@@ -100,6 +99,16 @@ const useWeatherStore = create<State>((set) => ({
       ),
     }));
   },
+  toggleDelete: (cityId: number) => {
+    set((state) => ({
+      citiesWeather: state.citiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? { ...cityWeather, isDelete: !cityWeather.isDelete } // Toggle isDelete
+          : cityWeather
+      ),
+    }));
+  },
+  getState: () => get(), // Implement the getState method
 }));
 
 export default useWeatherStore;
