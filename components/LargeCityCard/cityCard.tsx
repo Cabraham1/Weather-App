@@ -121,7 +121,7 @@ const CityCard: React.FC<CityCardProps> = ({
               color: "red",
             }}
           >
-            {temperature}
+            {temperature}°C
           </Typography>
         </Box>
         <Typography

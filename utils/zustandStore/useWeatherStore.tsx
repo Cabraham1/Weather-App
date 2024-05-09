@@ -48,38 +48,52 @@ const useWeatherStore = create<CustomState>((set, get) => ({
   favoriteCitiesWeather: [],
   activeCitiesWeather: [],
   addCityWeather: (cityWeather: { city: City; weatherData: WeatherData }) => {
-    set((state) => ({
-      citiesWeather: [
-        ...state.citiesWeather,
-        {
-          city: cityWeather.city,
-          weatherData: cityWeather.weatherData,
-          notes: [],
-          favorite: false,
-          isDelete: false,
-        },
-      ],
-      favoriteCitiesWeather: [
-        ...state.favoriteCitiesWeather,
-        {
-          city: cityWeather.city,
-          weatherData: cityWeather.weatherData,
-          notes: [],
-          favorite: false,
-          isDelete: false,
-        },
-      ],
-      activeCitiesWeather: [
-        ...state.activeCitiesWeather,
-        {
-          city: cityWeather.city,
-          weatherData: cityWeather.weatherData,
-          notes: [],
-          favorite: false,
-          isDelete: false,
-        },
-      ],
-    }));
+    set((state) => {
+      // Check if the city already exists in any of the arrays
+      const cityExists = state.citiesWeather.some(
+        (existingCity) =>
+          existingCity.city.geonameId === cityWeather.city.geonameId
+      );
+
+      if (!cityExists) {
+        // Add the city to each array if it doesn't exist
+        return {
+          citiesWeather: [
+            ...state.citiesWeather,
+            {
+              city: cityWeather.city,
+              weatherData: cityWeather.weatherData,
+              notes: [],
+              favorite: false,
+              isDelete: false,
+            },
+          ],
+          favoriteCitiesWeather: [
+            ...state.favoriteCitiesWeather,
+            {
+              city: cityWeather.city,
+              weatherData: cityWeather.weatherData,
+              notes: [],
+              favorite: false,
+              isDelete: false,
+            },
+          ],
+          activeCitiesWeather: [
+            ...state.activeCitiesWeather,
+            {
+              city: cityWeather.city,
+              weatherData: cityWeather.weatherData,
+              notes: [],
+              favorite: false,
+              isDelete: false,
+            },
+          ],
+        };
+      } else {
+        // Return the current state without adding the city if it already exists
+        return state;
+      }
+    });
   },
   addNote: (cityId: number, note: string) => {
     set((state) => ({
@@ -149,26 +163,38 @@ const useWeatherStore = create<CustomState>((set, get) => ({
             : cityWeather
       );
 
+      const updatedFavoriteCitiesWeather = state.favoriteCitiesWeather.map(
+        (cityWeather) =>
+          cityWeather.city.geonameId === cityId
+            ? { ...cityWeather, favorite: !cityWeather.favorite }
+            : cityWeather
+      );
+
       return {
-        citiesWeather: state.citiesWeather, 
-        favoriteCitiesWeather: state.favoriteCitiesWeather, 
-        activeCitiesWeather: updatedActiveCitiesWeather, 
+        ...state,
+        activeCitiesWeather: updatedActiveCitiesWeather,
+        favoriteCitiesWeather: updatedFavoriteCitiesWeather,
       };
     });
   },
 
   toggleDelete: (cityId: number) => {
     set((state) => ({
+      ...state,
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
           ? { ...cityWeather, isDelete: !cityWeather.isDelete }
           : cityWeather
       ),
-      activeCitiesWeather: state.citiesWeather.filter(
+      activeCitiesWeather: state.activeCitiesWeather.filter(
+        (cityWeather) => !cityWeather.isDelete
+      ),
+      favoriteCitiesWeather: state.favoriteCitiesWeather.filter(
         (cityWeather) => !cityWeather.isDelete
       ),
     }));
   },
+
   getState: () => get(),
 }));
 

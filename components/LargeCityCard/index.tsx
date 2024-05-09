@@ -27,7 +27,6 @@ const LargeCityCard = () => {
           ? { ...cityWeather, favorite: !cityWeather.favorite }
           : cityWeather
     );
-    setViewWeather(updatedActiveCitiesWeather);
 
     useWeatherStore.getState().toggleFavorite(geonameId);
   };
@@ -36,44 +35,27 @@ const LargeCityCard = () => {
     console.log("Deleted!");
   };
 
-  const handleViewClick = (data: {
-    cityName: string;
-    temperature: string;
-    weatherDescription: string;
-    population: number;
-    isLiked: boolean;
-  }) => {
-    console.log(data);
-    setViewWeather(data);
+  const handleViewClick = (cityWeather: any) => {
+    setViewWeather(cityWeather);
     setEditOpenSideModal(true);
   };
 
   return (
     <>
-      <Box>
-        <Typography
-          variant="h5"
-          sx={{
-            textAlign: "start",
-            textTransform: "capitalize",
-            fontSize: "1rem",
-            color: "gray",
-            mb: "2rem",
-          }}
-        >
-          Largest Cities in the World
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "center",
-            gap: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
-          {LargerCitiesData?.map((cityWeather, index) => (
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "start",
+          alignItems: "center",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        {LargerCitiesData?.sort((a, b) =>
+          a.city.toponymName.localeCompare(b.city.toponymName)
+        ) // Sort alphabetically
+          .map((cityWeather) => (
             <Box key={cityWeather.city.geonameId}>
               <CityCard
                 dislikeIconSrc={DislikeIcon}
@@ -100,20 +82,12 @@ const LargeCityCard = () => {
                   handleLikeClick(cityWeather.city.geonameId);
                 }}
                 onDeleteClick={handleDeleteClick}
-                // onViewClick={() =>
-                //   handleViewClick({
-                //     cityName: cityWeather.city.toponymName,
-                //     temperature: cityWeather.weatherData.temperature,
-                //     weatherDescription: cityWeather.weatherData.weatherCondition,
-                //     population: cityWeather.city.population,
-                //     isLiked: cityWeather.favorite,
-                //   })
-                // }
+                onViewClick={() => handleViewClick(cityWeather)}
               />
             </Box>
           ))}
-        </Box>
       </Box>
+
       <OptionSideModal
         openSideModal={openViewSideModal}
         setOpenSideModal={setEditOpenSideModal}

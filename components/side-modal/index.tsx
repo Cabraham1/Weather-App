@@ -6,12 +6,12 @@ import CloudLogo from "../../public/cloudy.svg";
 import RainLogo from "../../public/rain.svg";
 import LikeIcon from "../../public/like.svg";
 import disLikeIcon from "../../public/dislike.svg";
-import HorizontalCard from "../home-banner/HorizontalCard";
 import WeatherCard from "../home-banner/weatherCard";
 import ViewNote from "../Note/viewNote";
 import { noteDatas } from "../../utils/constant";
 import { AlertDialog, AlertDialogText } from "../Reusable-Dialog";
 import { useState } from "react";
+import SideModalCard from "../home-banner/SideModalCard";
 
 interface Note {
   id: number;
@@ -28,6 +28,7 @@ const Index: React.FC<{
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
+  console.log("SelectedWeatherData", SelectedWeatherData);
   const handleAddNote = () => {
     setOpenDialogAdd(false);
   };
@@ -82,7 +83,7 @@ const Index: React.FC<{
             width: { sm: "621px" },
           }}
         >
-          <Box sx={{}}>
+          <Box>
             <Box
               sx={{
                 display: "flex",
@@ -100,23 +101,14 @@ const Index: React.FC<{
                   width: "fit-cont%",
                 }}
               >
-                {!false ? (
+                {SelectedWeatherData?.favorite ? (
+                  <Image src={LikeIcon} alt="like" width={30} height={30} />
+                ) : (
                   <Image
                     src={disLikeIcon}
                     alt="dislike"
                     width={30}
                     height={30}
-                    // onClick={onLikeClick}
-                    style={{ cursor: "pointer" }}
-                  />
-                ) : (
-                  <Image
-                    src={LikeIcon}
-                    alt="like"
-                    width={30}
-                    height={30}
-                    // onClick={onLikeClick}
-                    style={{ cursor: "pointer" }}
                   />
                 )}
               </Box>
@@ -150,10 +142,15 @@ const Index: React.FC<{
               <Box>
                 <Image
                   src={
-                    SelectedWeatherData?.weatherDescription === "Sunny"
-                      ? SunnyLogo
-                      : SelectedWeatherData?.weatherDescription === "Cloudy"
-                      ? CloudLogo
+                    SelectedWeatherData?.weatherData?.temperature
+                      ? parseInt(SelectedWeatherData.weatherData.temperature) >=
+                        30
+                        ? SunnyLogo
+                        : parseInt(
+                            SelectedWeatherData.weatherData.temperature
+                          ) >= 20
+                        ? CloudLogo
+                        : RainLogo
                       : RainLogo
                   }
                   alt="banner"
@@ -183,7 +180,7 @@ const Index: React.FC<{
                 fontSize: "3.5rem",
               }}
             >
-              {SelectedWeatherData?.cityName}
+              {SelectedWeatherData?.city.toponymName}
             </Typography>
             <Typography
               variant="h1"
@@ -194,7 +191,7 @@ const Index: React.FC<{
                 color: "red",
               }}
             >
-              {SelectedWeatherData?.temperature}
+              {SelectedWeatherData?.weatherData.temperature}°C
             </Typography>
           </Box>
           <Typography
@@ -207,7 +204,9 @@ const Index: React.FC<{
               px: "10px",
             }}
           >
-            {SelectedWeatherData?.weatherDescription}
+            {SelectedWeatherData?.weatherData.clouds === "n/a"
+              ? "Normal Weather Today"
+              : SelectedWeatherData?.weatherData.clouds}
           </Typography>
 
           {/* population section */}
@@ -233,9 +232,15 @@ const Index: React.FC<{
                 fontSize: "1.5rem",
               }}
             >
-              {SelectedWeatherData?.population}
+              {SelectedWeatherData?.city.population}
             </Typography>
-            <HorizontalCard />
+            <SideModalCard
+              tempDegree={`${SelectedWeatherData?.weatherData.temperature} °C`}
+              humidityDegree={`${SelectedWeatherData?.weatherData.humidity} %`}
+              windDegree={`${
+                SelectedWeatherData?.weatherData.windSpeed ?? 0
+              } m/s`}
+            />
           </Box>
           <Box
             sx={{

@@ -2,7 +2,17 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 
-const HorizontalCard = () => {
+interface HorizontalCardProps {
+  tempDegree: string;
+  humidityDegree: string;
+  windDegree: string;
+}
+
+const SideModalCard: React.FC<HorizontalCardProps> = ({
+  tempDegree,
+  humidityDegree,
+  windDegree,
+}) => {
   return (
     <Box
       sx={{
@@ -37,7 +47,7 @@ const HorizontalCard = () => {
               color: "white",
             }}
           >
-            30%
+            {tempDegree}
           </Typography>
           <Typography
             variant="h5"
@@ -48,7 +58,7 @@ const HorizontalCard = () => {
               color: "white",
             }}
           >
-            Precipitation
+            Temperature
           </Typography>
         </Box>
       </Box>
@@ -72,7 +82,7 @@ const HorizontalCard = () => {
               color: "white",
             }}
           >
-            250%
+            {humidityDegree}
           </Typography>
           <Typography
             variant="h5"
@@ -107,7 +117,7 @@ const HorizontalCard = () => {
               color: "white",
             }}
           >
-          9km/h
+            {windDegree}
           </Typography>
           <Typography
             variant="h5"
@@ -118,7 +128,7 @@ const HorizontalCard = () => {
               color: "white",
             }}
           >
-           Wind Speed
+            Wind Speed
           </Typography>
         </Box>
       </Box>
@@ -126,4 +136,4 @@ const HorizontalCard = () => {
   );
 };
 
-export default HorizontalCard;
+export default SideModalCard;
