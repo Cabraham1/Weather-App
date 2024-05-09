@@ -2,23 +2,10 @@ import SunnyLogo from "../../public/sunny.svg";
 import CloudLogo from "../../public/cloudy.svg";
 import RainLogo from "../../public/rain.svg";
 import useWeatherStore from "../zustandStore/useWeatherStore";
+import { City, WeatherData } from "../../types";
 
-interface City {
-  adminCode1: string;
-  lng: string;
-  lat: string;
-  geonameId: number;
-  toponymName: string;
-  countryCode: string;
-  id: number; // Add the id property
-}
 
-interface WeatherData {
-  temperature?: string; // Make temperature optional
-  weatherObservation: any; // Adjust as needed
-  // Add more properties if needed
-}
-
+// Get the weather icon based on the weather description
 export const getWeatherIcon = (weatherDescription: string) => {
   switch (weatherDescription) {
     case "Sunny":
@@ -32,19 +19,22 @@ export const getWeatherIcon = (weatherDescription: string) => {
   }
 };
 
+// Truncate text to a specified length
 export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length > maxLength) {
+  if (text?.length > maxLength) {
     return text.substring(0, maxLength) + "...";
   }
   return text;
 };
 
+
+// Fetch cities weather data and add it to the store
 export const fetchCitiesWeather = async () => {
   try {
     const response = await fetch(
       "http://api.geonames.org/searchJSON?q=&featureCode=PPLC&orderby=population&maxRows=15&username=cabraham"
     );
-    const citiesData: { geonames: City[] } = await response.json(); // Type assertion
+    const citiesData: { geonames: City[] } = await response.json();
 
     // Map over each city and fetch its weather information
     const citiesWeatherPromises = citiesData.geonames.map(
@@ -53,7 +43,7 @@ export const fetchCitiesWeather = async () => {
         const weatherResponse = await fetch(
           `http://api.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
         );
-        const weatherData: WeatherData = await weatherResponse.json(); // Type assertion
+        const weatherData: WeatherData = await weatherResponse.json();
 
         return {
           city: city,
@@ -74,3 +64,24 @@ export const fetchCitiesWeather = async () => {
     console.error("Error fetching cities weather:", error);
   }
 };
+
+
+
+export function getFormattedDate() {
+  const months = [
+    "January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"
+  ];
+
+  const days = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+  ];
+
+  const currentDate = new Date();
+  const dayOfWeek = days[currentDate.getDay()];
+  const dayOfMonth = currentDate.getDate();
+  const month = months[currentDate.getMonth()];
+  const year = currentDate.getFullYear();
+
+  return `${dayOfWeek}, ${dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth} ${month}, ${year}`;
+}

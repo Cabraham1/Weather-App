@@ -1,8 +1,7 @@
 "use client";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { ImageFrameRectangular117By53 } from "../common/image-frames";
 import { navConfig } from "./config";
 import { NavItem } from "./item";
 
@@ -102,7 +101,20 @@ const Nav: React.FC<{
             ...(small && { paddingRight: "15px" }),
           }}
         >
-          <ImageFrameRectangular117By53 image="/mailLogo.svg" />
+          <Box>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: "2rem",
+                background:
+                  "linear-gradient(to right, #957DCD 0%, #523D7F 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              Weather App
+            </Typography>
+          </Box>
           <Box
             {...(large && { onClick: closeLargeNav })}
             {...(small && { onClick: closeSmallNav })}
@@ -137,7 +149,6 @@ const Nav: React.FC<{
                 </Box>
               </Box>
             ))}
-           
           </Box>
         </Box>
       </Box>

@@ -4,16 +4,22 @@ import { truncateText } from "../../utils/functions";
 
 interface Note {
   id: number;
-  content: string;
+  text: string;
 }
 
 interface ViewNoteProps {
   note: Note;
   onView: (noteId: number, content: string) => void;
   onDelete: (noteId: number, content: string) => void;
+  onEdit: (noteId: number, content: string) => void;
 }
 
-const ViewNote: React.FC<ViewNoteProps> = ({ note, onView, onDelete }) => {
+const ViewNote: React.FC<ViewNoteProps> = ({
+  note,
+  onView,
+  onDelete,
+  onEdit,
+}) => {
   return (
     <>
       <Box
@@ -35,7 +41,7 @@ const ViewNote: React.FC<ViewNoteProps> = ({ note, onView, onDelete }) => {
               textTransform: "capitalize",
             }}
           >
-            {truncateText(note.content, 50)}
+            {truncateText(note?.text, 50)}
           </Typography>
         </Box>
         <Box
@@ -57,10 +63,26 @@ const ViewNote: React.FC<ViewNoteProps> = ({ note, onView, onDelete }) => {
               },
             }}
             onClick={() => {
-              onView(note.id, note.content);
+              onView(note.id, note.text);
             }}
           >
             View
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#4C133F",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "white",
+                color: "#4C133F",
+              },
+            }}
+            onClick={() => {
+              onEdit(note.id, note.text);
+            }}
+          >
+            Edit
           </Button>
           <Button
             variant="contained"
@@ -72,7 +94,7 @@ const ViewNote: React.FC<ViewNoteProps> = ({ note, onView, onDelete }) => {
               },
             }}
             onClick={() => {
-              onDelete(note.id, note.content);
+              onDelete(note.id, note.text);
             }}
           >
             Delete

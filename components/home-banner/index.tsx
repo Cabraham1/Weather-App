@@ -3,8 +3,10 @@ import Image from "next/image";
 import React from "react";
 import VerticalCard from "./VerticalCard";
 import WeatherCard from "./weatherCard";
+import { getFormattedDate } from "../../utils/functions";
 
 const Index = () => {
+  const formattedDate = getFormattedDate();
   return (
     <>
       <Box
@@ -74,7 +76,7 @@ const Index = () => {
                       color: "white",
                     }}
                   >
-                    Wednesday, 08 May 2024 | 10:00AM
+                    {formattedDate}
                   </Typography>
                 </Box>
 

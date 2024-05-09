@@ -1,7 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import { getFormattedDate } from "../../utils/functions";
 
 const Index = () => {
+  const formattedDate = getFormattedDate();
   return (
     <Box
       sx={{
@@ -35,7 +37,7 @@ const Index = () => {
           color: "gray",
         }}
       >
-        Wednesday, 08 May, 2024
+        {formattedDate}
       </Typography>
     </Box>
   );

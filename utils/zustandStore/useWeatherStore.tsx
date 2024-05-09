@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 interface City {
   adminCode1: string;
   lng: string;
@@ -11,6 +12,7 @@ interface City {
 
 interface Note {
   text: string;
+  id: number;
 }
 
 interface WeatherData {
@@ -35,9 +37,10 @@ interface CustomState {
     city: City;
     weatherData: WeatherData;
   }) => void;
-  addNote: (cityId: number, note: string) => void;
-  removeNote: (cityId: number, noteIndex: number) => void;
+  addNote: (cityId: number, note: string, id: number) => void;
+  removeNote: (cityId: number, noteId: number) => void;
   viewNotes: (cityId: number) => string[];
+  editNote: (cityId: number, noteId: number, newText: string) => void;
   toggleFavorite: (cityId: number) => void;
   toggleDelete: (cityId: number) => void;
   getState: () => CustomState;
@@ -49,14 +52,12 @@ const useWeatherStore = create<CustomState>((set, get) => ({
   activeCitiesWeather: [],
   addCityWeather: (cityWeather: { city: City; weatherData: WeatherData }) => {
     set((state) => {
-      // Check if the city already exists in any of the arrays
       const cityExists = state.citiesWeather.some(
         (existingCity) =>
           existingCity.city.geonameId === cityWeather.city.geonameId
       );
 
       if (!cityExists) {
-        // Add the city to each array if it doesn't exist
         return {
           citiesWeather: [
             ...state.citiesWeather,
@@ -90,39 +91,17 @@ const useWeatherStore = create<CustomState>((set, get) => ({
           ],
         };
       } else {
-        // Return the current state without adding the city if it already exists
         return state;
       }
     });
   },
-  addNote: (cityId: number, note: string) => {
-    set((state) => ({
-      citiesWeather: state.citiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
-          : cityWeather
-      ),
-      favoriteCitiesWeather: state.favoriteCitiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
-          : cityWeather
-      ),
-      activeCitiesWeather: state.activeCitiesWeather.map((cityWeather) =>
-        cityWeather.city.geonameId === cityId
-          ? { ...cityWeather, notes: [...cityWeather.notes, { text: note }] }
-          : cityWeather
-      ),
-    }));
-  },
-  removeNote: (cityId: number, noteIndex: number) => {
+  addNote: (cityId: number, note: string, id: number) => {
     set((state) => ({
       citiesWeather: state.citiesWeather.map((cityWeather) =>
         cityWeather.city.geonameId === cityId
           ? {
               ...cityWeather,
-              notes: cityWeather.notes.filter(
-                (_, index) => index !== noteIndex
-              ),
+              notes: [...cityWeather.notes, { id, text: note }],
             }
           : cityWeather
       ),
@@ -130,9 +109,7 @@ const useWeatherStore = create<CustomState>((set, get) => ({
         cityWeather.city.geonameId === cityId
           ? {
               ...cityWeather,
-              notes: cityWeather.notes.filter(
-                (_, index) => index !== noteIndex
-              ),
+              notes: [...cityWeather.notes, { id, text: note }],
             }
           : cityWeather
       ),
@@ -140,20 +117,83 @@ const useWeatherStore = create<CustomState>((set, get) => ({
         cityWeather.city.geonameId === cityId
           ? {
               ...cityWeather,
-              notes: cityWeather.notes.filter(
-                (_, index) => index !== noteIndex
-              ),
+              notes: [...cityWeather.notes, { id, text: note }],
             }
           : cityWeather
       ),
     }));
   },
+
+  removeNote: (cityId: number, noteId: number) => {
+    set((state) => ({
+      citiesWeather: state.citiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter((note) => note.id !== noteId),
+            }
+          : cityWeather
+      ),
+      favoriteCitiesWeather: state.favoriteCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter((note) => note.id !== noteId),
+            }
+          : cityWeather
+      ),
+      activeCitiesWeather: state.activeCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.filter((note) => note.id !== noteId),
+            }
+          : cityWeather
+      ),
+    }));
+  },
+
   viewNotes: (cityId: number) => {
     const cityWeather = get().citiesWeather.find(
       (cityWeather) => cityWeather.city.geonameId === cityId
     );
     return cityWeather ? cityWeather.notes.map((note) => note.text) : [];
   },
+  editNote: (cityId: number, noteId: number, newText: string) => {
+    set((state) => ({
+      citiesWeather: state.citiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.map((note) =>
+                note.id === noteId ? { ...note, text: newText } : note
+              ),
+            }
+          : cityWeather
+      ),
+      favoriteCitiesWeather: state.favoriteCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.map((note) =>
+                note.id === noteId ? { ...note, text: newText } : note
+              ),
+            }
+          : cityWeather
+      ),
+      activeCitiesWeather: state.activeCitiesWeather.map((cityWeather) =>
+        cityWeather.city.geonameId === cityId
+          ? {
+              ...cityWeather,
+              notes: cityWeather.notes.map((note) =>
+                note.id === noteId ? { ...note, text: newText } : note
+              ),
+            }
+          : cityWeather
+      ),
+    }));
+  },
+
   toggleFavorite: (cityId: number) => {
     set((state) => {
       const updatedActiveCitiesWeather = state.activeCitiesWeather.map(

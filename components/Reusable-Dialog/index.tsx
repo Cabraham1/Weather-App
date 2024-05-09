@@ -20,10 +20,12 @@ export interface AlertDialogProps {
 interface AlertDialogTextProps {
   open: boolean;
   onClose: () => void;
-  onAgree: (description: string) => void;
+  onAgree: (newNote: string) => void;
   title: string;
   disagreeText: string;
   agreeText: string;
+  newNote: string;
+  setNewNote: (note: string) => void;
 }
 
 export const AlertDialog: React.FC<AlertDialogProps> = ({
@@ -136,13 +138,12 @@ export const AlertDialogText: React.FC<AlertDialogTextProps> = ({
   onAgree,
   disagreeText,
   agreeText,
+  newNote,
+  setNewNote,
 }) => {
-  const [description, setDescription] = React.useState("");
-
   const handleAgree = () => {
     if (onAgree) {
-      onAgree(description);
-      console.log(description)
+      onAgree(newNote);
     }
     onClose();
   };
@@ -177,9 +178,9 @@ export const AlertDialogText: React.FC<AlertDialogTextProps> = ({
                 id="outlined-basic"
                 label="Write in here..."
                 variant="outlined"
-                value={description}
+                value={newNote}
                 required
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setNewNote(e.target.value)}
               />
             </form>
           </DialogContentText>

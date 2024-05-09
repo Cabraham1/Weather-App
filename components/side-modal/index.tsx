@@ -8,10 +8,12 @@ import LikeIcon from "../../public/like.svg";
 import disLikeIcon from "../../public/dislike.svg";
 import WeatherCard from "../home-banner/weatherCard";
 import ViewNote from "../Note/viewNote";
-import { noteDatas } from "../../utils/constant";
 import { AlertDialog, AlertDialogText } from "../Reusable-Dialog";
 import { useState } from "react";
 import SideModalCard from "../home-banner/SideModalCard";
+import useWeatherStore from "../../utils/zustandStore/useWeatherStore";
+import LoaderBackdrop from "../common/loader";
+import toast from "react-hot-toast";
 
 interface Note {
   id: number;
@@ -27,10 +29,23 @@ const Index: React.FC<{
   const [openDialogView, setOpenDialogView] = useState(false);
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [newNote, setNewNote] = useState("");
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [editedNote, setEditedNote] = useState<Note | null>(null);
 
-  console.log("SelectedWeatherData", SelectedWeatherData);
   const handleAddNote = () => {
-    setOpenDialogAdd(false);
+    const cityId = SelectedWeatherData.city.geonameId;
+    if (newNote.trim() !== "") {
+      setIsLoading(true);
+      const newNoteId = Date.now(); // Generate unique ID for the new note
+      useWeatherStore.getState().addNote(cityId, newNote.trim(), newNoteId); // Pass the new note ID
+      setNotes([...notes, { id: newNoteId, content: newNote.trim() }]);
+      setIsLoading(false);
+    }
+    setNewNote("");
+    setOpenSideModal(false);
+    toast.success("Note added Successfully!");
   };
 
   const handleViewNote = (noteId: number, noteContent: string) => {
@@ -42,17 +57,54 @@ const Index: React.FC<{
   };
 
   const handleDeleteNote = (noteId: number, noteContent: string) => {
+    setOpenDialog(true); // Open delete confirmation dialog
+    // Pass the noteId to the onDelete callback
     setSelectedNote({
       id: noteId,
       content: noteContent,
     });
-    setOpenDialog(true);
+  };
+  const handleEditNote = (noteId: number, noteContent: string) => {
+    setEditedNote({
+      id: noteId,
+      content: noteContent,
+    });
+    setOpenDialogAdd(true);
   };
 
+  const handleSaveEditedNote = () => {
+    if (editedNote) {
+      const cityId = SelectedWeatherData.city.geonameId;
+      const noteIndex = SelectedWeatherData.notes.findIndex(
+        (note: Note) => note.id === editedNote.id
+      );
+      if (noteIndex !== -1) {
+        const updatedNotes = [...SelectedWeatherData.notes];
+        updatedNotes[noteIndex].content = editedNote.content; // Update content in the local state
+        useWeatherStore.getState().editNote(cityId, editedNote.id, editedNote.content); // Update content in the global state
+        setNotes(updatedNotes); // Update local state with the updated content
+        toast.success("Note edited Successfully!");
+      } else {
+        console.log("Note index not found.");
+      }
+      setEditedNote(null);
+      setOpenDialogAdd(false);
+    }
+  };
   const handleDelete = () => {
     if (selectedNote) {
+      const cityId = SelectedWeatherData.city.geonameId;
+      const noteIndex = SelectedWeatherData.notes.findIndex(
+        (note: Note) => note.id === selectedNote.id
+      );
+      if (noteIndex !== -1) {
+        useWeatherStore.getState().removeNote(cityId, selectedNote.id);
+      } else {
+      }
       setSelectedNote(null);
       setOpenDialog(false);
+      setOpenSideModal(false);
+      toast.success("Note deleted Successfully!");
     }
   };
 
@@ -67,6 +119,7 @@ const Index: React.FC<{
   };
   return (
     <>
+      {isLoading && <LoaderBackdrop />}
       <Dialog open={openSideModal} onClose={() => setOpenSideModal(false)}>
         <Box
           sx={{
@@ -278,15 +331,18 @@ const Index: React.FC<{
             >
               Notes
             </Typography>
-            {noteDatas?.map((note) => (
+            {SelectedWeatherData?.notes.map((note: any, index: any) => (
               <ViewNote
-                key={note.id}
+                key={index}
                 note={note}
                 onView={() => {
-                  handleViewNote(note.id, note.content);
+                  handleViewNote(note.id, note.text);
                 }}
                 onDelete={() => {
-                  handleDeleteNote(note.id, note.content);
+                  handleDeleteNote(note.id, note.text);
+                }}
+                onEdit={() => {
+                  handleEditNote(note.id, note.text);
                 }}
               />
             ))}
@@ -312,17 +368,23 @@ const Index: React.FC<{
         title={"My Note"}
         deleteColor={false}
         content={selectedNote?.content || ""}
-        disagreeText={"No"}
+        disagreeText={"Close"}
       />
 
-      {/* view modal ˝ */}
+      {/* add modal ˝ */}
       <AlertDialogText
         open={openDialogAdd}
         onClose={handleClickCloseAdd}
-        onAgree={handleAddNote}
-        title={"New Note"}
+        onAgree={editedNote ? handleSaveEditedNote : handleAddNote}
+        title={editedNote ? "Edit Note" : "New Note"}
         disagreeText={"Cancel"}
-        agreeText={"Save Note"}
+        newNote={editedNote ? editedNote.content : newNote}
+        setNewNote={(note: string) =>
+          editedNote
+            ? setEditedNote({ ...editedNote, content: note })
+            : setNewNote(note)
+        }
+        agreeText={editedNote ? "Save Changes" : "Save Note"}
       />
     </>
   );
