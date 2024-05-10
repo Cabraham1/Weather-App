@@ -7,7 +7,6 @@ import { getFormattedDate } from "../../utils/functions";
 import SideModalCard from "./SideModalCard";
 import { IndexProps, WeatherDataProps } from "../../types";
 
-
 const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
   const formattedDate = getFormattedDate();
   const weatherDataString = localStorage.getItem("UserWeatherData");
@@ -42,8 +41,21 @@ const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
           p: 2,
         }}
       >
-        <Grid container spacing={4}>
-          <Grid sx={{ minHeight: "100%" }} item xs={12} lg={6}>
+        <Grid
+          container
+          spacing={4}
+          sx={{
+          }}
+        >
+          <Grid
+            sx={{ minHeight: "100%" }}
+            item
+            xs={12}
+            lg={12}
+            xl={6}
+            md={12}
+            sm={12}
+          >
             <Box sx={{ height: "100%", overflow: "hidden" }}>
               <Box
                 sx={{
@@ -98,7 +110,15 @@ const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
               </Box>
             </Box>
           </Grid>
-          <Grid sx={{ minHeight: "100%" }} item xs={12} lg={6}>
+          <Grid
+            sx={{ minHeight: "100%" }}
+            item
+            xs={12}
+            lg={12}
+            xl={6}
+            md={12}
+            sm={12}
+          >
             <Box
               sx={{
                 height: "100%",
