@@ -4,7 +4,11 @@ import HomeBanner from "../../../../components/home-banner";
 import HomeHeader from "../../../../components/home-header";
 import LargeCityCard from "../../../../components/large-city-card";
 import { useEffect, useState } from "react";
-import { fetchCitiesWeather, fetchWeather, requestLocationPermission } from "../../../../utils/functions";
+import {
+  fetchCitiesWeather,
+  fetchWeather,
+  requestLocationPermission,
+} from "../../../../utils/functions";
 import useWeatherStore from "../../../../utils/zustandStore/useWeatherStore";
 import LoaderBackdrop from "../../../../components/common/loader";
 import SunnyLogo from "../../../../public/sunny.svg";
@@ -51,7 +55,12 @@ export default function Home() {
 
     fetchData();
     getLocationAndFetchWeather();
-  }, []);
+  }, [
+    fetchCitiesWeather,
+    requestLocationPermission,
+    fetchWeather,
+    useWeatherStore,
+  ]);
 
   const weatherDataString = localStorage.getItem("UserWeatherData");
   const weatherData: WeatherDataProps | null = weatherDataString

@@ -25,7 +25,11 @@ export type SxPropsType = {
   }
 
   export interface WeatherData {
-    temperature?: string; // Make temperature optional
-    weatherObservation: any; // Adjust as needed
-    // Add more properties if needed
+    temperature?: string; 
+    weatherObservation: any; 
+  }
+
+  export interface IndexProps {
+    tempDegree: string;
+    weatherLogo: string;
   }

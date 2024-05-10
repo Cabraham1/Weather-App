@@ -4,13 +4,15 @@ import React from "react";
 import WeatherCard from "./weatherCard";
 import { getFormattedDate } from "../../utils/functions";
 import SideModalCard from "./SideModalCard";
-interface IndexProps {
-  tempDegree: string;
-  weatherLogo: string;
-}
+import { IndexProps, WeatherDataProps } from "../../types";
+
 
 const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
   const formattedDate = getFormattedDate();
+  const weatherDataString = localStorage.getItem("UserWeatherData");
+  const weatherData: WeatherDataProps | null = weatherDataString
+    ? JSON.parse(weatherDataString)
+    : null;
   return (
     <>
       <Box
@@ -87,8 +89,8 @@ const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
 
                 <Box>
                   <SideModalCard
-                    humidityDegree={`10 %`}
-                    windDegree={`23 m/s`}
+                    humidityDegree={`${weatherData?.humidity || "0"} %`}
+                    windDegree={`${weatherData?.windSpeed || "0"} m/s`}
                     isRow={false}
                   />
                 </Box>
