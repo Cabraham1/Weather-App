@@ -11,6 +11,8 @@ import LoaderBackdrop from "../../../../components/common/loader";
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
