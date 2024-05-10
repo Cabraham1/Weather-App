@@ -110,7 +110,6 @@ GitHub: @Cabraham1
 <!-- FUTURE FEATURES -->
 🔭 Future Features <a name="future-features"></a>
  Unit Testing: Implement unit tests for applicable functionality.
- Enhanced Styling: Improve the overall aesthetic of the application.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!-- CONTRIBUTING -->
 🤝 Contributing <a name="contributing"></a>
