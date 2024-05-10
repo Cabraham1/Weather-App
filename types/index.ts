@@ -7,7 +7,11 @@ export type SxPropsType = {
     sx?: SxProps<Theme>;
   };
 
-
+  export type WeatherDataProps = {
+    temperature: number;
+    humidity: string;
+    windSpeed: string;
+  };
 
  export  interface City {
     adminCode1: string;
