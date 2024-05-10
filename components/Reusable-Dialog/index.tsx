@@ -6,6 +6,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Box, InputLabel, TextField, Typography } from "@mui/material";
+import Image from "next/image";
+import SideModalCard from "../home-banner/SideModalCard";
+import { getFormattedDate } from "../../utils/functions";
 
 export interface AlertDialogProps {
   open: boolean;
@@ -26,6 +29,18 @@ interface AlertDialogTextProps {
   agreeText: string;
   newNote: string;
   setNewNote: (note: string) => void;
+}
+interface WeatherModalProps {
+  open: boolean;
+  onClose: () => void;
+  title: string;
+  disagreeText: string;
+  weatherLogo: string;
+  tempDegree: string;
+  humidityDegree: string;
+  windDegree: string;
+  location: string;
+  isError: boolean;
 }
 
 export const AlertDialog: React.FC<AlertDialogProps> = ({
@@ -68,7 +83,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
             sx={{
               fontSize: "20px",
               fontWeight: 600,
-              color: "black",
+              color: "",
               mb: { xs: "5px", sm: "0px" },
               wordBreak: "break-all",
               textTransform: "capitalize",
@@ -78,7 +93,16 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText
+            id="alert-dialog-description"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              width: { xs: "600px", sm: "621px" },
+            }}
+          >
             <Typography
               sx={{
                 fontSize: "16px",
@@ -217,6 +241,175 @@ export const AlertDialogText: React.FC<AlertDialogTextProps> = ({
             }}
           >
             {agreeText}
+          </Button>
+        </DialogActions>
+      </Box>
+    </Dialog>
+  );
+};
+
+export const WeatherModal: React.FC<WeatherModalProps> = ({
+  open,
+  onClose,
+  disagreeText,
+  title,
+  weatherLogo,
+  tempDegree,
+  humidityDegree,
+  windDegree,
+  location,
+  isError,
+}) => {
+  const formattedDate = getFormattedDate();
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      sx={{ zIndex: 10000 }}
+      maxWidth="lg"
+    >
+      <Box
+        sx={{
+          px: "15px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          width: { xs: "100%", sm: "100%" },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "20px",
+              fontWeight: 600,
+              color: "black",
+              mb: { xs: "5px", sm: "0px" },
+              wordBreak: "break-all",
+              textAlign: "center",
+              textTransform: "capitalize",
+            }}
+          >
+            {title}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {isError == false ? (
+              <Box>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: "2.5rem",
+                    fontWeight: 600,
+                    color: "Blue",
+                    textAlign: "center",
+                    mb: { xs: "5px", sm: "0px" },
+                    wordBreak: "break-all",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {location}
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: ".75rem",
+                    color: "gray",
+                    textAlign: "center",
+                    wordBreak: "break-all",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {formattedDate}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "start",
+                    gap: "1rem",
+                    alignItems: "center",
+                  }}
+                >
+                  <Box>
+                    <Image
+                      src={weatherLogo}
+                      alt="banner"
+                      width={150}
+                      height={150}
+                    />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="h1"
+                      sx={{
+                        textAlign: "start",
+                        textTransform: "capitalize",
+                        fontSize: "5rem",
+                        color: "black",
+                      }}
+                    >
+                      {tempDegree}°C
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        textAlign: "start",
+                        textTransform: "capitalize",
+                        fontSize: ".8rem",
+                        color: "white",
+                      }}
+                    >
+                      {formattedDate}
+                    </Typography>
+                  </Box>
+
+                  <Box>
+                    <SideModalCard
+                      humidityDegree={`${humidityDegree}%`}
+                      windDegree={`${windDegree} m/s`}
+                      isRow={true}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            ) : (
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "2.5rem",
+                  fontWeight: 600,
+                  color: "red",
+                  textAlign: "center",
+                  mb: { xs: "5px", sm: "0px" },
+                  wordBreak: "break-all",
+                  textTransform: "capitalize",
+                }}
+              >
+                Weather data not found
+              </Typography>
+            )}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={onClose}
+            sx={{
+              borderRadius: "1rem",
+              textTransform: "capitalize",
+              backgroundColor: "black",
+              color: "white",
+              px: "20px",
+              "&:hover": {
+                backgroundColor: "darkgray",
+              },
+            }}
+          >
+            {disagreeText}
           </Button>
         </DialogActions>
       </Box>

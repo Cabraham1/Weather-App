@@ -2,16 +2,16 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 
-interface HorizontalCardProps {
-  tempDegree: string;
+interface SideModalCardProps {
   humidityDegree: string;
   windDegree: string;
+  isRow: boolean;
 }
 
-const SideModalCard: React.FC<HorizontalCardProps> = ({
-  tempDegree,
+const SideModalCard: React.FC<SideModalCardProps> = ({
   humidityDegree,
   windDegree,
+  isRow,
 }) => {
   return (
     <Box
@@ -22,46 +22,11 @@ const SideModalCard: React.FC<HorizontalCardProps> = ({
         py: "1rem",
         my: "1rem",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: isRow ? "row" : "column",
         gap: "1rem",
         background: "linear-gradient(#957DCD, #523D7F)",
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "start",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <Image src="/sunny.svg" alt="banner" width={30} height={30} />
-        <Box>
-          <Typography
-            variant="h5"
-            sx={{
-              textAlign: "start",
-              textTransform: "capitalize",
-              fontSize: ".9rem",
-              color: "white",
-            }}
-          >
-            {tempDegree}
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{
-              textAlign: "start",
-              textTransform: "capitalize",
-              fontSize: ".9rem",
-              color: "white",
-            }}
-          >
-            Temperature
-          </Typography>
-        </Box>
-      </Box>
       <Box
         sx={{
           display: "flex",

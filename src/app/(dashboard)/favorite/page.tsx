@@ -8,7 +8,7 @@ import { fetchCitiesWeather } from "../../../../utils/functions";
 import useWeatherStore from "../../../../utils/zustandStore/useWeatherStore";
 import LoaderBackdrop from "../../../../components/common/loader";
 
-export default function Home() {
+export default function Favorite() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -44,10 +44,6 @@ export default function Home() {
     <>
       <Box>
         <HomeHeader />
-        <HomeBanner
-        tempDegree="30"
-        weatherLogo="/sunny.svg"
-         />
         <Box>
           <Box
             sx={{

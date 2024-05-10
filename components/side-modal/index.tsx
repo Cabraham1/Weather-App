@@ -79,13 +79,12 @@ const Index: React.FC<{
       );
       if (noteIndex !== -1) {
         const updatedNotes = [...SelectedWeatherData.notes];
-        updatedNotes[noteIndex].content = editedNote.content; // Update content in the local state
+        updatedNotes[noteIndex].content = editedNote.content;
         useWeatherStore
           .getState()
-          .editNote(cityId, editedNote.id, editedNote.content); // Update content in the global state
-        setNotes(updatedNotes); // Update local state with the updated content
+          .editNote(cityId, editedNote.id, editedNote.content);
+        setNotes(updatedNotes);
       } else {
-        console.log("Note index not found.");
       }
       setEditedNote(null);
       setOpenDialogAdd(false);
@@ -295,6 +294,7 @@ const Index: React.FC<{
               windDegree={`${
                 SelectedWeatherData?.weatherData.windSpeed ?? 0
               } m/s`}
+              isRow={true}
             />
           </Box>
           <Box

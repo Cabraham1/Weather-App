@@ -4,6 +4,14 @@ import RainLogo from "../../public/rain.svg";
 import useWeatherStore from "../zustandStore/useWeatherStore";
 import { City, WeatherData } from "../../types";
 
+interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
+interface Position {
+  coords: Coordinates;
+}
 
 // Get the weather icon based on the weather description
 export const getWeatherIcon = (weatherDescription: string) => {
@@ -26,7 +34,6 @@ export const truncateText = (text: string, maxLength: number): string => {
   }
   return text;
 };
-
 
 // Fetch cities weather data and add it to the store
 export const fetchCitiesWeather = async () => {
@@ -65,16 +72,30 @@ export const fetchCitiesWeather = async () => {
   }
 };
 
-
-
 export function getFormattedDate() {
   const months = [
-    "January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
 
   const days = [
-    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
   ];
 
   const currentDate = new Date();
@@ -83,5 +104,57 @@ export function getFormattedDate() {
   const month = months[currentDate.getMonth()];
   const year = currentDate.getFullYear();
 
-  return `${dayOfWeek}, ${dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth} ${month}, ${year}`;
+  return `${dayOfWeek}, ${
+    dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth
+  } ${month}, ${year}`;
+}
+
+export const requestLocationPermission = () => {
+  return new Promise<{ latitude: number; longitude: number }>(
+    (resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position: Position) => {
+          const { latitude, longitude } = position.coords;
+          resolve({ latitude, longitude });
+        },
+        (error: GeolocationPositionError) => {
+          console.error("Error getting location:", error);
+          reject(error);
+        }
+      );
+    }
+  );
+};
+
+export async function searchLocation(query: string) {
+  try {
+    const response = await fetch(
+      `http://api.geonames.org/searchJSON?q=${query}&maxRows=1&username=cabraham`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error searching location:", error);
+    throw error;
+  }
+}
+
+// Inside fetchWeather function
+export async function fetchWeather(lat: number, lng: number) {
+  try {
+    const response = await fetch(
+      `http://api.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
+    );
+    const data = await response.json();
+
+    // Check if weather observation is available
+    if (data.weatherObservation) {
+      return data.weatherObservation;
+    } else {
+      return null; 
+    }
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+    throw error;
+  }
 }

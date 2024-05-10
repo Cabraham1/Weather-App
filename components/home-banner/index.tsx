@@ -1,11 +1,15 @@
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
-import VerticalCard from "./VerticalCard";
 import WeatherCard from "./weatherCard";
 import { getFormattedDate } from "../../utils/functions";
+import SideModalCard from "./SideModalCard";
+interface IndexProps {
+  tempDegree: string;
+  weatherLogo: string;
+}
 
-const Index = () => {
+const Index: React.FC<IndexProps> = ({ tempDegree, weatherLogo }) => {
   const formattedDate = getFormattedDate();
   return (
     <>
@@ -44,12 +48,13 @@ const Index = () => {
                   flexDirection: "row",
                   justifyContent: "start",
                   gap: "1rem",
+                  py: 2,
                   alignItems: "center",
                 }}
               >
                 <Box>
                   <Image
-                    src="/sunny.svg"
+                    src={weatherLogo}
                     alt="banner"
                     width={150}
                     height={150}
@@ -65,7 +70,7 @@ const Index = () => {
                       color: "white",
                     }}
                   >
-                    23°
+                    {tempDegree} °C
                   </Typography>
                   <Typography
                     variant="h5"
@@ -81,7 +86,11 @@ const Index = () => {
                 </Box>
 
                 <Box>
-                  <VerticalCard />
+                  <SideModalCard
+                    humidityDegree={`10 %`}
+                    windDegree={`23 m/s`}
+                    isRow={false}
+                  />
                 </Box>
               </Box>
             </Box>

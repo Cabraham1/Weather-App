@@ -144,7 +144,7 @@ const Nav: React.FC<{
                     key={item.title}
                     icon={item.icon}
                     title={item.title}
-                    isActive={path.startsWith(item.path) || path === item.path}
+                    isActive={path === item.path}
                   />
                 </Box>
               </Box>

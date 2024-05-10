@@ -56,7 +56,7 @@ function NotFound() {
             >
               The page you’re looking for doesn’t exist.
             </Typography>
-            <Link href="/dashboard/messages/home">
+            <Link href="/">
               <Button
                 color="primary"
                 size={matchMobileView ? "small" : "large"}
