@@ -1,12 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
+import { SideModalCardProps } from "../../types";
 
-interface SideModalCardProps {
-  humidityDegree: string;
-  windDegree: string;
-  isRow: boolean;
-}
+
 
 const SideModalCard: React.FC<SideModalCardProps> = ({
   humidityDegree,

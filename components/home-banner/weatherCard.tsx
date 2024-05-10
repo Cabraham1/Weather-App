@@ -1,14 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
+import { WeatherCardProps, WeatherDataProps } from "../../types";
 
-interface WeatherData {
-  time: string;
-  iconSrc: string;
-  temperature: string;
-}
 
-const WeatherCard: React.FC<WeatherData> = ({ time, iconSrc, temperature }) => {
+
+const WeatherCard: React.FC<WeatherCardProps> = ({ time, iconSrc, temperature }) => {
   return (
     <Box
       sx={{

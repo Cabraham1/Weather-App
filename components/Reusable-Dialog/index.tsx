@@ -9,39 +9,9 @@ import { Box, InputLabel, TextField, Typography } from "@mui/material";
 import Image from "next/image";
 import SideModalCard from "../home-banner/SideModalCard";
 import { getFormattedDate } from "../../utils/functions";
+import { AlertDialogProps, AlertDialogTextProps, WeatherModalProps } from "../../types";
 
-export interface AlertDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onAgree?: () => void;
-  title: string;
-  content: string;
-  disagreeText?: string;
-  agreeText?: string;
-  deleteColor?: boolean;
-}
-interface AlertDialogTextProps {
-  open: boolean;
-  onClose: () => void;
-  onAgree: (newNote: string) => void;
-  title: string;
-  disagreeText: string;
-  agreeText: string;
-  newNote: string;
-  setNewNote: (note: string) => void;
-}
-interface WeatherModalProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  disagreeText: string;
-  weatherLogo: string;
-  tempDegree: string;
-  humidityDegree: string;
-  windDegree: string;
-  location: string;
-  isError: boolean;
-}
+
 
 export const AlertDialog: React.FC<AlertDialogProps> = ({
   open,
