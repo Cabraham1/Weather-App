@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import CityCard from "./cityCard";
@@ -110,8 +111,9 @@ const LargeCityCard = () => {
                   gap: "1rem",
                   flexWrap: "wrap",
                 }}
+                key={cityWeather.city.geonameId}
               >
-                <Box key={cityWeather.city.geonameId}>
+               
                   <CityCard
                     dislikeIconSrc={DislikeIcon}
                     likeIconSrc={LikeIcon}
@@ -147,7 +149,6 @@ const LargeCityCard = () => {
                     onViewClick={() => handleViewClick(cityWeather)}
                   />
                 </Box>
-              </Box>
             ))
         )}
       </Box>

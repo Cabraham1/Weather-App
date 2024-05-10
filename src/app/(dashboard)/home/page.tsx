@@ -1,20 +1,20 @@
 "use client";
 import { Box } from "@mui/material";
-import HomeBanner from "../../../../components/home-banner";
-import HomeHeader from "../../../../components/home-header";
-import LargeCityCard from "../../../../components/large-city-card";
 import { useEffect, useState } from "react";
 import {
   fetchCitiesWeather,
   fetchWeather,
   requestLocationPermission,
 } from "../../../../utils/functions";
+import HomeBanner from "../../../../components/home-banner";
+import HomeHeader from "../../../../components/home-header";
 import useWeatherStore from "../../../../utils/zustandStore/useWeatherStore";
 import LoaderBackdrop from "../../../../components/common/loader";
 import SunnyLogo from "../../../../public/sunny.svg";
 import CloudLogo from "../../../../public/cloudy.svg";
 import RainLogo from "../../../../public/rain.svg";
 import { WeatherDataProps } from "../../../../types";
+import LargeCityCard from "../../../../components/large-city-card";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -52,16 +52,14 @@ export default function Home() {
       }
     };
 
-    fetchData();
-    getLocationAndFetchWeather();
-  }, [
-    fetchCitiesWeather,
-    requestLocationPermission,
-    fetchWeather,
-    useWeatherStore,
-  ]);
+    // Check if running in the client-side environment before accessing localStorage
+    if (typeof window !== "undefined") {
+      fetchData();
+      getLocationAndFetchWeather();
+    }
+  }, []);
 
-  const weatherDataString = localStorage.getItem("UserWeatherData");
+  const weatherDataString = typeof window !== "undefined" ? localStorage.getItem("UserWeatherData") : null;
   const weatherData: WeatherDataProps | null = weatherDataString
     ? JSON.parse(weatherDataString)
     : null;
