@@ -4,8 +4,6 @@ import RainLogo from "../../public/rain.svg";
 import useWeatherStore from "../zustandStore/useWeatherStore";
 import { City, Position, WeatherData } from "../../types";
 
-
-
 // Get the weather icon based on the weather description
 export const getWeatherIcon = (weatherDescription: string) => {
   switch (weatherDescription) {
@@ -32,7 +30,7 @@ export const truncateText = (text: string, maxLength: number): string => {
 export const fetchCitiesWeather = async () => {
   try {
     const response = await fetch(
-      "http://api.geonames.org/searchJSON?q=&featureCode=PPLC&orderby=population&maxRows=15&username=cabraham"
+      "https://secure.geonames.org/searchJSON?q=&featureCode=PPLC&orderby=population&maxRows=15&username=cabraham"
     );
     const citiesData: { geonames: City[] } = await response.json();
 
@@ -41,7 +39,7 @@ export const fetchCitiesWeather = async () => {
       async (city: City) => {
         const { lat, lng, toponymName } = city;
         const weatherResponse = await fetch(
-          `http://api.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
+          `https://secure.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
         );
         const weatherData: WeatherData = await weatherResponse.json();
 
@@ -122,7 +120,7 @@ export const requestLocationPermission = () => {
 export async function searchLocation(query: string) {
   try {
     const response = await fetch(
-      `http://api.geonames.org/searchJSON?q=${query}&maxRows=1&username=cabraham`
+      `https://secure.geonames.org/searchJSON?q=${query}&maxRows=1&username=cabraham`
     );
     const data = await response.json();
     return data;
@@ -136,7 +134,7 @@ export async function searchLocation(query: string) {
 export async function fetchWeather(lat: number, lng: number) {
   try {
     const response = await fetch(
-      `http://api.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
+      `https://secure.geonames.org/findNearByWeatherJSON?lat=${lat}&lng=${lng}&username=cabraham`
     );
     const data = await response.json();
 
@@ -144,7 +142,7 @@ export async function fetchWeather(lat: number, lng: number) {
     if (data.weatherObservation) {
       return data.weatherObservation;
     } else {
-      return null; 
+      return null;
     }
   } catch (error) {
     console.error("Error fetching weather data:", error);

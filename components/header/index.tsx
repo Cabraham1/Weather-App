@@ -26,6 +26,7 @@ const Header: React.FC<{
       if (data.geonames.length > 0) {
         const { lat, lng } = data.geonames[0];
         const WeatherData = await fetchWeather(lat, lng);
+        console.log(WeatherData);
         setWeatherData(WeatherData);
       } else {
       }
@@ -34,8 +35,11 @@ const Header: React.FC<{
     } finally {
       setIsLoading(false);
       setOpenDialog(true);
-      setWeatherData(null);
     }
+  };
+  const handleCloseDialog = () => {
+    setWeatherData(null);
+    setOpenDialog(false);
   };
 
   return (
@@ -97,7 +101,7 @@ const Header: React.FC<{
       <WeatherModal
         open={openDialog}
         location={weatherData?.stationName}
-        onClose={() => setOpenDialog(false)}
+        onClose={handleCloseDialog}
         disagreeText="Close"
         title="Weather Information"
         weatherLogo={
