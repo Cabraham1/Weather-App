@@ -79,16 +79,18 @@ const Header: React.FC<{
         >
           <Image src={"/menu.svg"} width={24} height={24} alt={"Menu Icon"} />
         </Box>
-        <Box sx={{ flexGrow: 1, justifyContent: "flex-end", display: "flex" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            justifyContent: "flex-end",
+            display: "flex",
+            pr: "4rem",
+          }}
+        >
           <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             <SearchBar
               sendQuery={(data: string) => searchQuery && searchQuery(data)}
             />
-
-            <Box sx={{ marginRight: "40px" }}>
-              <Image alt="bell" width={24} height={24} src="/bell.svg" />
-              {/* add count here  */}
-            </Box>
           </Box>
         </Box>
       </Box>
