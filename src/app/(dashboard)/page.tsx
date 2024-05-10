@@ -1,21 +1,13 @@
 "use client";
-import { Box } from "@mui/material";
-import MainPage from "./home/page";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
   useEffect(() => {
-    const isFirstTime = localStorage.getItem("firstTime") !== "true";
+    router.push("/home");
+  }, []);
 
-    if (isFirstTime) {
-      localStorage.setItem("firstTime", "true");
-      window.location.reload();
-    }
-  }, []); 
-
-  return (
-    <Box>
-      <MainPage />
-    </Box>
-  );
+  return null;
 }
