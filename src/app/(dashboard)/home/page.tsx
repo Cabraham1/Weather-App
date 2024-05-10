@@ -44,7 +44,6 @@ export default function Home() {
       try {
         const { latitude, longitude } = await requestLocationPermission();
         const weatherData = await fetchWeather(latitude, longitude);
-        console.log("weatherData", weatherData);
         if (weatherData) {
           localStorage.setItem("UserWeatherData", JSON.stringify(weatherData));
         }

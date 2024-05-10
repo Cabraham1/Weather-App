@@ -28,13 +28,13 @@ const Header: React.FC<{
         const WeatherData = await fetchWeather(lat, lng);
         setWeatherData(WeatherData);
       } else {
-        console.log("No search results found.");
       }
     } catch (error) {
       console.error("Error handling search query:", error);
     } finally {
       setIsLoading(false);
       setOpenDialog(true);
+      setWeatherData(null);
     }
   };
 

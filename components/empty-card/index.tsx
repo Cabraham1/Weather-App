@@ -1,8 +1,10 @@
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 const Index = () => {
+  const path = usePathname();
   return (
     <Box
       sx={{
@@ -33,7 +35,9 @@ const Index = () => {
             wordBreak: "break-all",
           }}
         >
-          You haven’t created an activity yet for an orphan!
+          {path === "/favorite"
+            ? "You have not added your favourite cities Yet!"
+            : "No content available"}
         </Typography>
       </Box>
     </Box>

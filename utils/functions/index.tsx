@@ -2,16 +2,9 @@ import SunnyLogo from "../../public/sunny.svg";
 import CloudLogo from "../../public/cloudy.svg";
 import RainLogo from "../../public/rain.svg";
 import useWeatherStore from "../zustandStore/useWeatherStore";
-import { City, WeatherData } from "../../types";
+import { City, Position, WeatherData } from "../../types";
 
-interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
 
-interface Position {
-  coords: Coordinates;
-}
 
 // Get the weather icon based on the weather description
 export const getWeatherIcon = (weatherDescription: string) => {

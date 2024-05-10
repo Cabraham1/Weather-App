@@ -381,7 +381,7 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
               <Typography
                 variant="h6"
                 sx={{
-                  fontSize: "2.5rem",
+                  fontSize: "1.5rem",
                   fontWeight: 600,
                   color: "red",
                   textAlign: "center",
@@ -390,7 +390,7 @@ export const WeatherModal: React.FC<WeatherModalProps> = ({
                   textTransform: "capitalize",
                 }}
               >
-                Weather data not found
+                No observation found for this location
               </Typography>
             )}
           </DialogContentText>

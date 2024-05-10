@@ -33,3 +33,12 @@ export type SxPropsType = {
     tempDegree: string;
     weatherLogo: string;
   }
+
+  export interface Coordinates {
+    latitude: number;
+    longitude: number;
+  }
+  
+  export interface Position {
+    coords: Coordinates;
+  }
