@@ -1,18 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { truncateText } from "../../utils/functions";
+import { ViewNoteProps } from "../../types";
 
-interface Note {
-  id: number;
-  text: string;
-}
 
-interface ViewNoteProps {
-  note: Note;
-  onView: (noteId: number, content: string) => void;
-  onDelete: (noteId: number, content: string) => void;
-  onEdit: (noteId: number, content: string) => void;
-}
 
 const ViewNote: React.FC<ViewNoteProps> = ({
   note,

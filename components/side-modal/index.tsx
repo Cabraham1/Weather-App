@@ -289,10 +289,11 @@ const Index: React.FC<{
               {SelectedWeatherData?.city.population}
             </Typography>
             <SideModalCard
-              tempDegree={`${SelectedWeatherData?.weatherData.temperature} °C`}
-              humidityDegree={`${SelectedWeatherData?.weatherData.humidity} %`}
+              humidityDegree={`${
+                SelectedWeatherData?.weatherData?.humidity ?? "1"
+              } %`}
               windDegree={`${
-                SelectedWeatherData?.weatherData.windSpeed ?? 0
+                SelectedWeatherData?.weatherData?.windSpeed ?? 0
               } m/s`}
               isRow={true}
             />

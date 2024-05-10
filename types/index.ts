@@ -87,3 +87,29 @@ export type SxPropsType = {
     iconSrc: string;
     temperature: string;
   }
+
+  export interface CityCardProps {
+    dislikeIconSrc?: any;
+    likeIconSrc?: any;
+    weatherIconSrc?: any;
+    cityName?: string;
+    isLiked?: boolean;
+    temperature?: string;
+    weatherDescription?: string;
+    population?: number;
+    onLikeClick?: () => void;
+    onDeleteClick?: () => void;
+    onViewClick?: () => void;
+  }
+
+  export interface Note {
+    id: number;
+    text: string;
+  }
+  
+  export interface ViewNoteProps {
+    note: Note;
+    onView: (noteId: number, content: string) => void;
+    onDelete: (noteId: number, content: string) => void;
+    onEdit: (noteId: number, content: string) => void;
+  }

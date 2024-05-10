@@ -11,8 +11,6 @@ import SideModalCard from "../home-banner/SideModalCard";
 import { getFormattedDate } from "../../utils/functions";
 import { AlertDialogProps, AlertDialogTextProps, WeatherModalProps } from "../../types";
 
-
-
 export const AlertDialog: React.FC<AlertDialogProps> = ({
   open,
   onClose,

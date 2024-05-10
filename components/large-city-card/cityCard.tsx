@@ -2,20 +2,9 @@ import { Box, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 import { PeopleAlt, Delete } from "@mui/icons-material";
+import { CityCardProps } from "../../types";
 
-interface CityCardProps {
-  dislikeIconSrc?: any;
-  likeIconSrc?: any;
-  weatherIconSrc?: any;
-  cityName?: string;
-  isLiked?: boolean;
-  temperature?: string;
-  weatherDescription?: string;
-  population?: number;
-  onLikeClick?: () => void;
-  onDeleteClick?: () => void;
-  onViewClick?: () => void;
-}
+
 
 const CityCard: React.FC<CityCardProps> = ({
   dislikeIconSrc,
