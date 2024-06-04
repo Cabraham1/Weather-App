@@ -113,3 +113,5 @@ export type SxPropsType = {
     onDelete: (noteId: number, content: string) => void;
     onEdit: (noteId: number, content: string) => void;
   }
+
+  
